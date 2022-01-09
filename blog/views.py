@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponse
@@ -76,9 +76,6 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 
-# class PostDetailView(DetailView):
-#     model = Post
-
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
     comments = post.comments.all()
@@ -86,7 +83,11 @@ def post_detail(request, pk):
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
-            form.save()
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect('post-detail', pk=pk)
     else:
         form = CommentForm()
     return render(request, 'blog/post_detail.html', {'post': post, 
@@ -97,30 +98,6 @@ def post_detail(request, pk):
 # class PostCommentView(LoginRequiredMixin, View):
     
 #     def get(self, request, *args, **kwargs):
-
-
-# @login_required
-# def profile(request):
-#     if request.method == 'POST':
-#         u_form = UserUpdateForm(request.POST, instance=request.user)
-#         p_form = ProfileUpdateForm(request.POST,
-#                                    request.FILES,
-#                                    instance=request.user.profile)
-
-#         if u_form.is_valid() and p_form.is_valid():
-#             u_form.save()
-#             p_form.save()
-#             messages.success(request, f'Your account has been updated!')
-#             return redirect('profile')
-#     else:
-#         u_form = UserUpdateForm(instance=request.user)
-#         p_form = ProfileUpdateForm(instance=request.user.profile)
-
-#     context = {
-#         'u_form': u_form,
-#         'p_form': p_form
-#     }
-#     return render(request, 'users/profile.html', context)
 
 
 def about(request):

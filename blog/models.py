@@ -31,9 +31,12 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, related_name="comments", on_delete=models.CASCADE)
 
     class Meta:
-        ordering = ('date_posted',)
+        ordering = ('-date_posted',)
 
     def __str__(self):
         return f'Comment from {self.author.username} on {self.date_posted}'
+
+    def get_absolute_url(self):
+        return reverse('post-detail', kwargs={'pk': self.pk})
 
     
