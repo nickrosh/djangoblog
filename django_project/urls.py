@@ -20,6 +20,7 @@ from users import views as user_views
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('register/', user_views.register_view, name='register'),
@@ -36,6 +37,7 @@ urlpatterns = [
                                                                  name='password_reset_complete'),
     path('', include('blog.urls')),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

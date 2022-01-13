@@ -95,10 +95,5 @@ def post_detail(request, pk):
                                                      'comments': comments})
 
 
-# class PostCommentView(LoginRequiredMixin, View):
-    
-#     def get(self, request, *args, **kwargs):
-
-
 def about(request):
     return render(request, 'blog/about.html', {'title': 'About'})

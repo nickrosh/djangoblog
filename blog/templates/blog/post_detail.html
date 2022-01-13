@@ -17,8 +17,10 @@
             <h2 class="article-title">{{ post.title }}</h2>
             <p class="article-content">{{ post.content }}</p>
         </div>
-        <br/><br/>
+    </article>
+    <article class="media content-section">
         <div>
+            {% if user.is_authenticated %}
             <form method="POST">
                 {% csrf_token %}
                 <h4>Write a New Comment</h4>
@@ -30,6 +32,14 @@
                 </button>
             </div>
             </form>
+            {% else %}
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    Please log in to post comments. <a class="ml-2" href="{% url 'login' %}">Sign In</a>
+                </small>
+            </div>
+        </article>
+            {% endif %}
             {% for comment in comments  %}
                 <div class="text-muted">
                     {{ comment.author }}
@@ -38,5 +48,5 @@
                 <p class="article-content">{{ comment.content }}</p>
             {% endfor %}
                 </div>
-        </article>
+
 {% endblock content %}
