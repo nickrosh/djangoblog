@@ -1,4 +1,6 @@
 from django.urls import path
+from rest_framework import routers
+
 from .views import (AboutView, PostListView, PostCreateView,
                     PostUpdateView, PostDeleteView, UserPostListView)
 from . import views
@@ -13,3 +15,9 @@ urlpatterns = [
     path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
     path('about/', AboutView.as_view(), name='blog-about'),
 ]
+
+
+router = routers.DefaultRouter()
+router.register('api/tasks', views.TaskViewSet, 'task-viewset')
+
+urlpatterns += router.urls

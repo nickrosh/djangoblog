@@ -8,9 +8,11 @@ from django.views.generic import (ListView, DetailView, CreateView,
                                   UpdateView, DeleteView, TemplateView)
 from django.views.generic.base import View
 from django.views.generic.edit import FormMixin
+from rest_framework import viewsets
 
 from blog.forms import CommentForm
-from .models import Comment, Post, Task
+from blog.models import Comment, Post, Task
+from blog.serializers import TaskSerializer
 
 
 def home(request):
@@ -109,3 +111,15 @@ class AboutView(TemplateView):
                 'name': c[1]
             } for c in Task.DIFFICULTY_CHOICES],
         }
+
+
+class TaskViewSet(viewsets.ModelViewSet):
+    serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        # filter queryset based on logged in user
+        return self.request.user.tasks.all()
+
+    def perform_create(self, serializer):
+        # ensure current user is correctly populated on new objects
+        serializer.save(user=self.request.user)
