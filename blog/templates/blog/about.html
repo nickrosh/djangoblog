@@ -1,7 +1,10 @@
 {% extends "blog/base.html" %}
 {% load static %}
 {% block content %}
-    <h1>Welcome to the About Page. There's nothing to know about.</h1>
-    <div id="root" />
+    <!-- div that the JavaScript framework will render in -->
+    <div id="js-framework-home"></div>
+    <!-- making the difficulty_choices variable avialable in the DOM -->
+    {{ difficulty_choices|json_script:'difficulty-choices' }}
+    <!-- bundle file with our JavaScript application logic -->
     <script src="{% static 'index-bundle.js' %}"></script>
 {% endblock content %}

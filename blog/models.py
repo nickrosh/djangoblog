@@ -45,11 +45,16 @@ class Comment(models.Model):
     
 class Task(models.Model):
 
+    DIFFICULTY_CHOICES = (
+        ('e', 'Easy'),
+        ('m', 'Medium'),
+        ('h', 'Hard')
+    )
     user = models.ForeignKey(User, on_delete=models.CASCADE, 
                              related_name='tasks')
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=300)
-    due_date = models.DateField()
+    difficulty = models.CharField(max_length=20, choices=DIFFICULTY_CHOICES)
 
     def __str__(self):
-        return f'Task: {self.name} Due: {self.due_date}'
+        return f'Task: {self.name} Difficulty: {self.difficulty}'

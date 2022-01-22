@@ -1,15 +1,16 @@
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.views.generic import (ListView, DetailView, CreateView,
-                                  UpdateView, DeleteView)
+                                  UpdateView, DeleteView, TemplateView)
 from django.views.generic.base import View
 from django.views.generic.edit import FormMixin
 
 from blog.forms import CommentForm
-from .models import Comment, Post
+from .models import Comment, Post, Task
 
 
 def home(request):
@@ -95,5 +96,16 @@ def post_detail(request, pk):
                                                      'comments': comments})
 
 
-def about(request):
-    return render(request, 'blog/about.html', {'title': 'About'})
+@method_decorator(login_required, name='dispatch')
+class AboutView(TemplateView):
+    # our hybrid template, shown above
+    template_name = 'templates/blog/about.html'
+
+    def get_context_data(self, **kwargs):
+        # passing the difficulty choices to the template in the context
+        return {
+            'difficulty_choices': [{
+                'id': c[0],
+                'name': c[1]
+            } for c in Task.DIFFICULTY_CHOICES],
+        }
